@@ -10,7 +10,7 @@ export const createTable = async (
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
     table.timestamp('deleted_at').nullable();
-    table.decimal('is_deleted', null, 0).defaultTo(0);
+    table.float('is_deleted', null, 0).defaultTo(0);
   });
 
   await knex.schema.alterTable(tableName, callback);

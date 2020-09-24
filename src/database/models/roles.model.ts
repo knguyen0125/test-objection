@@ -32,7 +32,7 @@ export default class RoleModel extends BaseModel {
         to: 'users.id',
         through: {
           from: 'usersRoles.roleId',
-          to: 'usersRoles.adminId',
+          to: 'usersRoles.userId',
         },
       },
     },

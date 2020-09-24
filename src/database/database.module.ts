@@ -14,6 +14,7 @@ import RoleModel from './models/roles.model';
         client: 'pg',
         connection: {
           host: 'localhost',
+          port: 5433,
           user: 'root',
           password: 'root',
           database: 'root',

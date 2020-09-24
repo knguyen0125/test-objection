@@ -14,7 +14,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { JoiValidationFilter } from 'src/joi-validation.filter';
 
-@Controller('admin')
+@Controller('users')
 @UsePipes(ValidationPipe)
 @UseFilters(JoiValidationFilter)
 export class UserController {

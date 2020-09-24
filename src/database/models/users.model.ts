@@ -4,12 +4,8 @@ import { mixin, RelationMappings } from 'objection';
 import RoleModel from './roles.model';
 
 const Password = require('objection-password')();
-const Visibility = require('objection-visibility').default;
 
-export default class UserModel extends mixin(BaseModel, [
-  Password,
-  Visibility,
-]) {
+export default class UserModel extends mixin(BaseModel, [Password]) {
   id!: number;
   firstName!: string;
   lastName!: string;
@@ -36,8 +32,17 @@ export default class UserModel extends mixin(BaseModel, [
       lastName: Joi.string(),
       email: Joi.string().email(),
       password: Joi.string().min(8),
-      isDeleted: Joi.number(),
     });
+  }
+
+  $formatJson(json) {
+    const formattedJson = super.$formatJson(json);
+
+    if (formattedJson.isDeleted !== 0) {
+      return null;
+    }
+
+    return formattedJson;
   }
 
   static relationMappings: RelationMappings = {

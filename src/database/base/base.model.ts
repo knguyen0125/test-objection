@@ -1,15 +1,17 @@
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import { JoiValidator } from '../validators/joi.validator';
-import softDelete from './soft-delete-plugin';
+import SoftDelete from './soft-delete-plugin';
+import * as Joi from 'joi';
 
-export default class BaseModel extends mixin(
-  Model,
-  softDelete({
-    columnName: 'isDeleted',
-    deletedValue: () => Math.round(new Date().getTime() / 1000),
-    notDeletedValue: 0,
-  }),
-) {
+const Visibility = require('objection-visibility').default;
+
+@SoftDelete({
+  columnName: 'isDeleted',
+  deletedValue: () => Math.round(new Date().getTime() / 1000),
+  notDeletedValue: 0,
+})
+@Visibility
+export default class BaseModel extends Model {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -27,9 +29,18 @@ export default class BaseModel extends mixin(
     }
   }
 
-  $beforeDelete() {
-    this.deletedAt = new Date().toISOString();
+  static get baseJoiSchema() {
+    return Joi.object().keys({
+      createdAt: Joi.date().required(),
+      updatedAt: Joi.date().required(),
+      deletedAt: Joi.date().required(),
+      isDeleted: Joi.number().required(),
+    });
   }
+
+  static joiSchema: Joi.ObjectSchema;
+  static visible?: string[];
+  static hidden?: string[];
 
   static createValidator() {
     return new JoiValidator();
